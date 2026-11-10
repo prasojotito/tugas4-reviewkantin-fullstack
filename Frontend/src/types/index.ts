@@ -36,3 +36,15 @@ export interface ApiErrorBody {
   message: string;
   errors?: FieldError[];
 }
+
+// Bentuk respons sukses dari backend
+export interface ApiResponse<T> {
+  status: 'success';
+  data: T;
+}
+
+export interface ListResponse<T> {
+  status: 'success';
+  data: T[];
+  meta: Pagination;
+}
