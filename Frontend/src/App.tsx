@@ -6,6 +6,9 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { StallDetailPage } from './pages/StallDetailPage';
+import { StallCreatePage } from './pages/StallCreatePage';
+import { StallEditPage } from './pages/StallEditPage';
 
 function App() {
   return (
@@ -15,6 +18,23 @@ function App() {
         <main className="container">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/stalls/:id" element={<StallDetailPage />} />
+                        <Route
+              path="/stalls/new"
+              element={
+                <ProtectedRoute roles={['owner', 'admin']}>
+                  <StallCreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stalls/:id/edit"
+              element={
+                <ProtectedRoute roles={['owner', 'admin']}>
+                  <StallEditPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route
