@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const TOKEN_KEY = 'token';
+export const UNAUTHORIZED_EVENT = 'auth:unauthorized';
 
 export const tokenStorage = {
   get: (): string | null => localStorage.getItem(TOKEN_KEY),
@@ -20,3 +21,17 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+// 401 saat token ada: token tidak valid atau kedaluwarsa, sesi diakhiri.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const url: string = error.config?.url ?? '';
+    const isLoginRequest = url.includes('/auth/login');
+    if (axios.isAxiosError(error) && error.response?.status === 401 && !isLoginRequest && tokenStorage.get()) {
+      tokenStorage.clear();
+      window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+    }
+    return Promise.reject(error);
+  },
+);
