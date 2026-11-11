@@ -4,6 +4,7 @@ import { stallsApi } from '../api/stalls';
 import { parseApiError, type ParsedError } from '../api/errors';
 import { useAuth } from '../context/AuthContext';
 import { canDeleteStall, canEditStall } from '../utils/permissions';
+import { categoryEmoji, stallGradient } from '../utils/stallVisual';
 import type { Stall } from '../types';
 
 export function StallDetailPage() {
@@ -71,58 +72,100 @@ export function StallDetailPage() {
       )}
 
       {loading && (
+        <>
+          <p className="sr-only" role="status">
+            Memuat detail warung...
+          </p>
+          <div className="detail" aria-hidden="true">
+            <div className="detail-media skeleton" />
+            <div className="detail-body">
+              <div className="skeleton line tall w70" />
+              <div className="skeleton line w40" />
+              <div className="skeleton line w90" />
+              <div className="skeleton line w90" />
+            </div>
+          </div>
+        </>
+      )}
+
+      {!loading && error?.status === 404 && (
         <div className="state-box">
-          <div className="spinner" aria-hidden="true" />
-          <p className="muted">Memuat detail warung...</p>
+          <div className="state-emoji" aria-hidden="true">
+            😕
+          </div>
+          <p>
+            <strong>Warung tidak ditemukan.</strong>
+          </p>
+          <Link to="/" className="btn btn-outline">
+            Lihat semua warung
+          </Link>
         </div>
       )}
 
-      {!loading && error && (
+      {!loading && error && error.status !== 404 && (
         <div className="alert alert-error">
           <p>
-            <strong>{error.status === 404 ? 'Warung tidak ditemukan.' : 'Gagal memuat detail.'}</strong>{' '}
-            {error.message}
+            <strong>Gagal memuat detail.</strong> {error.message}
           </p>
-          {error.status !== 404 && (
-            <button type="button" className="btn btn-outline" onClick={() => setReloadKey((k) => k + 1)}>
-              Coba lagi
-            </button>
-          )}
+          <button type="button" className="btn btn-outline" onClick={() => setReloadKey((k) => k + 1)}>
+            Coba lagi
+          </button>
         </div>
       )}
 
       {!loading && !error && stall && (
-        <article className="card detail-card">
-          <div className="stall-card-head">
-            <h1>{stall.name}</h1>
-            {stall.isPopular && <span className="badge badge-popular">Populer</span>}
+        <article className="detail">
+          <div className="detail-media" style={{ background: stallGradient(stall.id) }}>
+            <span className="detail-emoji" aria-hidden="true">
+              {categoryEmoji(stall.category)}
+            </span>
           </div>
-          {stall.category && <span className="tag">{stall.category}</span>}
-          <dl className="detail-list">
-            <dt>Lokasi</dt>
-            <dd>{stall.location || '-'}</dd>
-            <dt>Rating</dt>
-            <dd>
-              ★ {stall.avgRating.toFixed(1)} ({stall.reviewCount} ulasan)
-            </dd>
-            <dt>Deskripsi</dt>
-            <dd>{stall.description || 'Belum ada deskripsi.'}</dd>
-          </dl>
 
-          {(canEditStall(user, stall) || canDeleteStall(user)) && (
-            <div className="actions">
-              {canEditStall(user, stall) && (
-                <Link to={`/stalls/${stall.id}/edit`} className="btn btn-primary">
-                  Ubah
-                </Link>
-              )}
-              {canDeleteStall(user) && (
-                <button type="button" className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
-                  {deleting ? 'Menghapus...' : 'Hapus'}
-                </button>
-              )}
+          <div className="detail-body">
+            <div className="detail-title">
+              <h1>{stall.name}</h1>
+              {stall.isPopular && <span className="chip chip-popular">🔥 Populer</span>}
             </div>
-          )}
+
+            <div className="info-grid">
+              <div className="info-item">
+                <span className="info-label">Lokasi</span>
+                <span>📍 {stall.location || '-'}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Kategori</span>
+                <span>{stall.category || '-'}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Rating</span>
+                <span>{stall.reviewCount > 0 ? `★ ${stall.avgRating.toFixed(1)}` : 'Belum ada rating'}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Ulasan</span>
+                <span>{stall.reviewCount}</span>
+              </div>
+            </div>
+
+            <div className="detail-desc">
+              <h2>Tentang warung</h2>
+              <p>{stall.description || 'Belum ada deskripsi.'}</p>
+            </div>
+
+            {(canEditStall(user, stall) || canDeleteStall(user)) && (
+              <div className="actions">
+                {canEditStall(user, stall) && (
+                  <Link to={`/stalls/${stall.id}/edit`} className="btn btn-primary">
+                    Ubah
+                  </Link>
+                )}
+                {canDeleteStall(user) && (
+                  <button type="button" className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
+                    {deleting ? 'Menghapus...' : 'Hapus'}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </article>
       )}
     </div>
