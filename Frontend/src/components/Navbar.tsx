@@ -1,6 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { canCreateStall } from '../utils/permissions';
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -22,7 +21,7 @@ export function Navbar() {
           <NavLink to="/" end>
             Warung
           </NavLink>
-          {canCreateStall(user) && <NavLink to="/stalls/new">Tambah Warung</NavLink>}
+          <NavLink to="/stalls/new">Tambah Warung</NavLink>
           {user ? (
             <>
               <NavLink to="/profile">Profil</NavLink>

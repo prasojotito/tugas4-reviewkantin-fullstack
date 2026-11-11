@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { ApiResponse, ListResponse, Pagination, Stall } from '../types';
+import type { ApiResponse, ListResponse, Pagination, Review, Stall } from '../types';
 
 export interface StallQuery {
   search?: string;
@@ -23,6 +23,11 @@ export const stallsApi = {
 
   get: async (id: number): Promise<Stall> => {
     const res = await api.get<ApiResponse<Stall>>(`/stalls/${id}`);
+    return res.data.data;
+  },
+
+  reviews: async (id: number): Promise<Review[]> => {
+    const res = await api.get<ApiResponse<Review[]>>(`/stalls/${id}/reviews`);
     return res.data.data;
   },
 

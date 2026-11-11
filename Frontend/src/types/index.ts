@@ -19,6 +19,21 @@ export interface Stall {
   isPopular: boolean;
 }
 
+export interface Review {
+  id: number;
+  stallId: number;
+  userId: number;
+  rating: number;
+  comment: string | null;
+  likeCount: number;
+  createdAt: string | null;
+  updatedAt: string | null;
+  user: {
+    id: number;
+    name: string;
+  };
+}
+
 export interface Pagination {
   page: number;
   limit: number;

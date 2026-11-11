@@ -26,51 +26,112 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="card form-card">
-      <h1>Registrasi</h1>
-      {error && <div className="alert alert-error">{error.message}</div>}
+    <section className="auth-page" aria-labelledby="register-title">
+      <div className="auth-card">
+        <aside className="auth-aside auth-aside-register">
+          <Link to="/" className="auth-brand">
+            <span className="auth-brand-mark" aria-hidden="true">
+              🍴
+            </span>
+            <span>Review Kantin</span>
+          </Link>
+          <div className="auth-aside-copy">
+            <span className="auth-aside-kicker">Jelajahi rasa lokal</span>
+            <h2>Satu akun, banyak cerita rasa.</h2>
+            <p>Bergabunglah dengan komunitas yang saling berbagi rekomendasi warung kampus.</p>
+          </div>
+          <div className="auth-food-art" aria-hidden="true">
+            <span className="auth-food auth-food-main">🍜</span>
+            <span className="auth-food auth-food-small auth-food-top">🥐</span>
+            <span className="auth-food auth-food-small auth-food-bottom">🥤</span>
+          </div>
+        </aside>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="form-group">
-          <label htmlFor="name">Nama</label>
-          <input id="name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
-          {error?.fieldErrors.name && <span className="field-error">{error.fieldErrors.name}</span>}
-        </div>
+        <div className="auth-content">
+          <div className="auth-heading">
+            <span className="auth-eyebrow">Mulai perjalanan kulinermu</span>
+            <h1 id="register-title">Buat akun baru</h1>
+            <p>Daftar untuk menemukan dan berbagi warung favorit di kampus.</p>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-          />
-          {error?.fieldErrors.email && <span className="field-error">{error.fieldErrors.email}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-          {error?.fieldErrors.password && (
-            <span className="field-error">{error.fieldErrors.password}</span>
+          {error && (
+            <div className="alert alert-error" role="alert">
+              {error.message}
+            </div>
           )}
+
+          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label htmlFor="name">Nama lengkap</label>
+              <input
+                id="name"
+                placeholder="Contoh: Nadia Putri"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
+                aria-invalid={Boolean(error?.fieldErrors.name)}
+                aria-describedby={error?.fieldErrors.name ? 'name-error' : undefined}
+              />
+              {error?.fieldErrors.name && (
+                <span id="name-error" className="field-error">
+                  {error.fieldErrors.name}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">Alamat email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="nama@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                aria-invalid={Boolean(error?.fieldErrors.email)}
+                aria-describedby={error?.fieldErrors.email ? 'email-error' : undefined}
+              />
+              {error?.fieldErrors.email && (
+                <span id="email-error" className="field-error">
+                  {error.fieldErrors.email}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Minimal 8 karakter"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+                aria-invalid={Boolean(error?.fieldErrors.password)}
+                aria-describedby={error?.fieldErrors.password ? 'password-error' : undefined}
+              />
+              {error?.fieldErrors.password && (
+                <span id="password-error" className="field-error">
+                  {error.fieldErrors.password}
+                </span>
+              )}
+              <span className="auth-field-hint">Gunakan minimal 8 karakter untuk password.</span>
+            </div>
+
+            <button className="btn btn-primary auth-submit" type="submit" disabled={submitting}>
+              {submitting ? 'Membuat akun...' : 'Buat akun'}
+              {!submitting && <span aria-hidden="true">→</span>}
+            </button>
+          </form>
+
+          <p className="auth-switch">
+            Sudah punya akun? <Link to="/login">Masuk</Link>
+          </p>
+          <Link to="/" className="auth-back">
+            ← Kembali ke beranda
+          </Link>
         </div>
-
-        <button className="btn btn-primary" type="submit" disabled={submitting}>
-          {submitting ? 'Memproses...' : 'Daftar'}
-        </button>
-      </form>
-
-      <p className="muted">
-        Sudah punya akun? <Link to="/login">Login</Link>
-      </p>
-    </div>
+      </div>
+    </section>
   );
 }

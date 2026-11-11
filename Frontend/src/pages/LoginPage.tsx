@@ -34,46 +34,98 @@ export function LoginPage() {
   };
 
   return (
-    <div className="card form-card">
-      <h1>Login</h1>
-      {state.message && <div className="alert alert-info">{state.message}</div>}
-      {error && <div className="alert alert-error">{error.message}</div>}
+    <section className="auth-page" aria-labelledby="login-title">
+      <div className="auth-card">
+        <aside className="auth-aside">
+          <Link to="/" className="auth-brand">
+            <span className="auth-brand-mark" aria-hidden="true">
+              🍴
+            </span>
+            <span>Review Kantin</span>
+          </Link>
+          <div className="auth-aside-copy">
+            <span className="auth-aside-kicker">Senang melihatmu kembali</span>
+            <h2>Rasa favoritmu selalu dekat.</h2>
+            <p>Masuk untuk mengelola warung dan melanjutkan cerita kulinermu di kampus.</p>
+          </div>
+          <div className="auth-food-art" aria-hidden="true">
+            <span className="auth-food auth-food-main">🍛</span>
+            <span className="auth-food auth-food-small auth-food-top">🥟</span>
+            <span className="auth-food auth-food-small auth-food-bottom">☕</span>
+          </div>
+        </aside>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-          />
-          {error?.fieldErrors.email && <span className="field-error">{error.fieldErrors.email}</span>}
-        </div>
+        <div className="auth-content">
+          <div className="auth-heading">
+            <span className="auth-eyebrow">Selamat datang kembali</span>
+            <h1 id="login-title">Masuk ke akunmu</h1>
+            <p>Gunakan email dan password yang terdaftar untuk melanjutkan.</p>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-          {error?.fieldErrors.password && (
-            <span className="field-error">{error.fieldErrors.password}</span>
+          {state.message && (
+            <div className="alert alert-info" role="status">
+              {state.message}
+            </div>
           )}
+          {error && (
+            <div className="alert alert-error" role="alert">
+              {error.message}
+            </div>
+          )}
+
+          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label htmlFor="email">Alamat email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="nama@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                aria-invalid={Boolean(error?.fieldErrors.email)}
+                aria-describedby={error?.fieldErrors.email ? 'email-error' : undefined}
+              />
+              {error?.fieldErrors.email && (
+                <span id="email-error" className="field-error">
+                  {error.fieldErrors.email}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Masukkan password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                aria-invalid={Boolean(error?.fieldErrors.password)}
+                aria-describedby={error?.fieldErrors.password ? 'password-error' : undefined}
+              />
+              {error?.fieldErrors.password && (
+                <span id="password-error" className="field-error">
+                  {error.fieldErrors.password}
+                </span>
+              )}
+            </div>
+
+            <button className="btn btn-primary auth-submit" type="submit" disabled={submitting}>
+              {submitting ? 'Memeriksa akun...' : 'Masuk'}
+              {!submitting && <span aria-hidden="true">→</span>}
+            </button>
+          </form>
+
+          <p className="auth-switch">
+            Belum punya akun? <Link to="/register">Daftar sekarang</Link>
+          </p>
+          <Link to="/" className="auth-back">
+            ← Kembali ke beranda
+          </Link>
         </div>
-
-        <button className="btn btn-primary" type="submit" disabled={submitting}>
-          {submitting ? 'Memproses...' : 'Login'}
-        </button>
-      </form>
-
-      <p className="muted">
-        Belum punya akun? <Link to="/register">Daftar</Link>
-      </p>
-    </div>
+      </div>
+    </section>
   );
 }

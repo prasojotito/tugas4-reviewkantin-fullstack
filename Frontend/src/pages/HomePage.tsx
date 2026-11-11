@@ -2,18 +2,15 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { stallsApi } from '../api/stalls';
 import { parseApiError, type ParsedError } from '../api/errors';
-import { useAuth } from '../context/AuthContext';
 import { StallCard } from '../components/StallCard';
 import { StallCardSkeleton } from '../components/StallCardSkeleton';
 import { CategoryTiles } from '../components/CategoryTiles';
 import { Pagination } from '../components/Pagination';
-import { canCreateStall } from '../utils/permissions';
 import type { Pagination as PaginationMeta, Stall } from '../types';
 
 const PAGE_SIZE = 8;
 
 export function HomePage() {
-  const { user } = useAuth();
   const location = useLocation();
   const flash = (location.state as { message?: string } | null)?.message;
 
@@ -151,11 +148,9 @@ export function HomePage() {
             {isFiltering ? 'Hasil pencarian' : 'Semua Warung'}
             {meta && !loading && <span className="muted count"> · {meta.total} warung</span>}
           </h2>
-          {canCreateStall(user) && (
-            <Link to="/stalls/new" className="btn btn-primary btn-sm">
-              + Tambah Warung
-            </Link>
-          )}
+          <Link to="/stalls/new" className="btn btn-primary btn-sm">
+            + Tambah Warung
+          </Link>
         </div>
 
         {isFiltering && (
